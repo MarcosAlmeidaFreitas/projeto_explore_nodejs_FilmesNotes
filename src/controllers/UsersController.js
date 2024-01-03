@@ -1,18 +1,21 @@
-const knex = require("knex");
+//Importante que o knex venha dessa configuração para a inserção de dados no banco.
+const knex = require("../database/knex/index");
 const { hash, compare } = require("bcrypt")
 const AppError = require("../utils/AppError");
 
 
 class UsersController{
   async create(request, response){
-    let {name, email, password} = request.body;
+    const {name, email, password} = request.body;
 
     // Checando se o usuário já está cadastrado com email
-    //const checkUserExists = await knex("users").where({email : email}).first();
+    const checkUserExists = await knex("users").where({email : email}).first();
     
-    // if(checkUserExists){
-    //   throw new AppError("Este email já está em uso", 401);
-    // }
+    console.log(checkUserExists);
+
+    if(checkUserExists){
+       throw new AppError("Este email já está em uso");
+    }
 
     //Verificando se os campos estão vazios
     if(!name){
@@ -24,13 +27,11 @@ class UsersController{
     }
 
     //criptografando a senha do usuário
-    password = await hash(password, 8);
+    const hashedPassword = await hash(password, 8);
 
-    await knex('users').insert([{name: name},{email: email}, {password: password}]);
+    await knex('users').insert({name, email, password:hashedPassword});
 
-    response.status(201).json(`Usuário ${name} criado com sucesso.`);
-
-    console.log(name, email, password);
+    response.status(201).json(`O usuário ${name} foi criado com sucesso.`);
   }
 }
 
