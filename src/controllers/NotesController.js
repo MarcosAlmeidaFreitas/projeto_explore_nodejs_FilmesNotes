@@ -65,10 +65,11 @@ class NotesController{
       notes = await knex('tags').whereIn({name : filterTags});
       
     }else{
-      console.log(user_id);
+      let title2 = title;
+      title2 = title2 ?? "";
       notes = await knex("notes")
         .where('user_id', user_id)
-        .whereLike("title", `%${title}%`);
+        .whereLike("title", `%${title2}%`);
     }
 
     response.status(200).json(notes);
