@@ -52,7 +52,26 @@ class NotesController{
   }
 
   async index(request, response){
-    
+    const {title, user_id, tags} = request.body;
+    let notes;
+
+    if(tags){
+      console.log(tags);
+      let filterTags = tags.map(tag => tag.trim());
+      filterTags = filterTags.map(word => word.split(","));
+      
+      console.log(filterTags);
+      
+      notes = await knex('tags').whereIn({name : filterTags});
+      
+    }else{
+      console.log(user_id);
+      notes = await knex("notes")
+        .where('user_id', user_id)
+        .whereLike("title", `%${title}%`);
+    }
+
+    response.status(200).json(notes);
   }
 }
 
