@@ -2,11 +2,11 @@ const NotesController = require("../controllers/NotesController");
 const {Router} = require("express");
 
 const notesController = new NotesController();
-const routes =  Router();
+const notesRoutes =  Router();
 
-routes.get("/", notesController.index);
-routes.post("/:user_id", notesController.create);
-routes.delete("/:note_id", notesController.delete);
-routes.get("/:note_id", notesController.show);
+notesRoutes.get("/", notesController.index);
+notesRoutes.post("/:user_id", notesController.create);
+notesRoutes.delete("/:note_id", notesController.delete);
+notesRoutes.get("/:note_id", notesController.show);
 
-module.exports = routes;  
+module.exports = notesRoutes;  
